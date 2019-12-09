@@ -1,0 +1,37 @@
+server {
+    listen         80 default_server;
+    listen [::]:80 default_server;
+    server_name    icvs-1-api.ihrteam.test;
+    root           /var/www/html/public_html/public;
+    index          index.php;
+
+    client_max_body_size 10M;
+    client_body_buffer_size 10M;
+
+    location ~* \.php$ {
+     if (!-f $document_root$fastcgi_script_name) {
+        return 404;
+     }    
+     fastcgi_pass backend_upstream;
+     fastcgi_index index.php;
+
+     fastcgi_param   SCRIPT_FILENAME    $document_root$fastcgi_script_name;
+     fastcgi_param   SCRIPT_NAME        $fastcgi_script_name;
+
+     fastcgi_split_path_info ^(.+\.php)(/.+)$;
+
+     include         fastcgi_params;
+   }
+
+   location / {
+      try_files $uri $uri/ /index.php?$query_string;
+   }
+}
+
+upstream backend_upstream {
+   server services_icvs_phpfpm_1:9000;
+   server services_icvs_phpfpm_2:9000;
+   server services_icvs_phpfpm_3:9000;
+   server services_icvs_phpfpm_4:9000;
+   server services_icvs_phpfpm_5:9000;
+}
