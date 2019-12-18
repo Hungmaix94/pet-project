@@ -11,10 +11,20 @@
 |
 */
 
+
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/abc', function () {
-    return 'hello';
+Route::get('/abc', 'GoogleApiController@handle');
+
+Route::group(['prefix' => 'v1'], function () {
+    Route::get('/test-google/', '\Modules\Google\Controllers\GoogleApiController@handle');
 });
+
+
+
+
+Route::get( '/auth0/callback', '\Auth0\Login\Auth0Controller@callback' )->name( 'auth0-callback' );
+Route::get( '/login', 'Auth\Auth0IndexController@login' )->name( 'login' );
+Route::get( '/logout', 'Auth\Auth0IndexController@logout' )->name( 'logout' )->middleware('auth');
