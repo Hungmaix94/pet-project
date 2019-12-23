@@ -2,7 +2,7 @@
 
 namespace Modules\Auth\Controllers;
 
-use Illuminate\Support\Facades\Log;
+
 use App\Helpers\CommonHelper;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -36,6 +36,7 @@ class AuthController extends Controller
                     'code' => 'required',
                     'state' => 'required'
                 ]);
+
                 $data = $this->authService->exchangeToken($request->get('code'));
 
                 $userInfo = $this->authService->getUser($data['access_token']);
